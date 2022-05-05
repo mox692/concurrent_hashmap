@@ -1,0 +1,5 @@
+*.o
+malloc_test
+malloc
+hashmap_test
+.vscode/*
