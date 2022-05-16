@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include "hashmap.hpp"
 #include <cctest/cctest.h>
+#include <thread>
+#include <chrono>
+#include <vector>
 
 using namespace hashmap;
 

@@ -13,7 +13,7 @@ install:
 test: $(TEST_TARGET)
 
 $(TEST_TARGET): $(OBJS) $(TEST_OBJS)
-	$(CXX) -o $@ $^
+	$(CXX) -pthread -o $@ $^
 	./$(TEST_TARGET)
 
 %.o: %.cc
@@ -22,6 +22,6 @@ $(TEST_TARGET): $(OBJS) $(TEST_OBJS)
 update_submodule:
 	git submodule update --remote
 
-clean:
+c:
 	rm -f $(TEST_TARGET) $(TEST_OBJS) $(OBJS) *.o
 	rm -f $(INSTALL_DIR)/hashmap.hpp
