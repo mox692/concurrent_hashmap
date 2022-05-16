@@ -7,6 +7,17 @@ namespace hashmap
     static const size_t DEFAULT_HASH_ARR_SIZE = 10000;
 
     template <typename V>
+    class List
+    {
+    public:
+        List(V elm) : elm(elm){};
+        V elm;
+        List *next;
+
+    private:
+    };
+
+    template <typename V>
     class HashMap
     {
     public:
