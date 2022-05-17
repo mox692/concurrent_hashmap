@@ -5,16 +5,16 @@ CXX    = g++
 PREFIX?=/usr/local
 INSTALL_DIR=$(PREFIX)/include/hashmap
 
-install:
-	mkdir -p $(INSTALL_DIR)
-	cp -pR hashmap.hpp $(INSTALL_DIR)
-	cd cctest && make install
-
 test: $(TEST_TARGET)
 
 $(TEST_TARGET): $(OBJS) $(TEST_OBJS)
 	$(CXX) -pthread -o $@ $^
 	./$(TEST_TARGET)
+
+install:
+	mkdir -p $(INSTALL_DIR)
+	cp -pR hashmap.hpp $(INSTALL_DIR)
+	cd cctest && make install
 
 %.o: %.cc
 	$(CXX) -c -o $@ $^
