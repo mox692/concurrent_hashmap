@@ -66,5 +66,20 @@ int main()
             return -1;
         }
     }
+    {
+        // 同じkeyを指定した時に後からsetした値になるか
+        HashMap<int> *h = new HashMap<int>();
+        std::string k1("a");
+        int v1 = 1;
+        int v2 = 2;
+        h->set(k1, v1);
+        h->set(k1, v2);
+
+        if (*h->get(k1) != v2)
+        {
+            printf("expect %d, got %d\n", v2, *h->get(k1));
+            return -1;
+        }
+    }
     CC_TEST_END;
 }

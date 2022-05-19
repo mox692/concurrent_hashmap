@@ -70,13 +70,51 @@ namespace hashmap
             return 0;
         }
         List<V> *head = this->inner[h];
-        for (; head->next != nullptr; head = head->next)
+        // MEMO: head->key == k を条件に入れてるのは、バケットの先頭のkeyが一致している時も
+        //       loop内の処理に入れたいため.
+        for (List<V> *prev = nullptr; head->next != nullptr || head->key == k; prev = head, head = head->next)
         {
             if (head->key == k)
             {
-                List<V> new_list = List<V>(k, v);
-                new_list.next = head->next;
-                *head = new_list;
+                // * 同じkeyによる更新処理の場合
+                // Hashmapに同じkeyの要素が追加される場合は、そのkeyのvalueを上書きしてしまえば良いが、
+                // thread安全に実装しようとすると注意が必要.
+                //
+                // [prevが存在する時]
+                // prev -> head -> next
+                // ↓
+                // prev -> head -> next
+                //   |               ^
+                //   V               |
+                //   --> new_head -> |
+                //
+                // [prevが存在しない(先頭のitemのkeyが一致)した時]
+                // inner[h] -> head
+                // ↓
+                // inner[h] -> next
+                //   |
+                //   V
+                //   --> new_head ->
+                //
+                // どちらも処理の順番としては、
+                // 1. new_headの生成
+                // 2. new_head->nextをnextに繋ぐ
+                // 3. prev -> nextを headからnew_headにCASでつなぎ変える.
+                // 4. headの開放
+
+                List<V> *new_list = new List<V>(k, v);
+                new_list->next = head->next;
+                if (prev != nullptr)
+                {
+                    // prevが存在する時
+                    prev->next = new_list; // TODO: CASで書き換える
+                }
+                else
+                {
+                    // prevが存在しない時
+                    this->inner[h] = new_list;
+                }
+                delete head;
                 return 0;
             }
         }
